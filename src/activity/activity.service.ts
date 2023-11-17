@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, MoreThanOrEqual, ArrayContains } from 'typeorm';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { Activity } from './entities/activity.entity';
@@ -55,6 +55,13 @@ export class ActivityService {
     });
   }
 
+  async findAllByFilters(day: string, participant: number) {
+    return this.activityRepository.findBy({
+      maxParticipants: MoreThanOrEqual(participant),
+      weekSchedule: ArrayContains([day]),
+    });
+  }
+
   findOne(id: string) {
     return this.activityRepository.findOneBy({ id });
   }
@@ -74,7 +81,22 @@ export class ActivityService {
       throw new NotFoundException();
     }
 
-    return this.activityRepository.save(updateActivityDto);
+    const activity: Activity = new Activity();
+    activity.id = id;
+    activity.name = updateActivityDto.name;
+    activity.description = updateActivityDto.description;
+    activity.direction = updateActivityDto.direction;
+    activity.zipCode = updateActivityDto.zipCode;
+    activity.providerId = updateActivityDto.providerId;
+    activity.typeId = updateActivityDto.typeId;
+    activity.price = updateActivityDto.price;
+    activity.duration = updateActivityDto.duration;
+    activity.weekSchedule = updateActivityDto.weekSchedule;
+    activity.startTimes = updateActivityDto.startTimes;
+    activity.maxParticipants = updateActivityDto.maxParticipants;
+    activity.slots = updateActivityDto.slots;
+
+    return this.activityRepository.save(activity);
   }
 
   remove(id: string) {

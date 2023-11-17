@@ -8,6 +8,8 @@ import { ActivityModule } from './activity/activity.module';
 import { ProviderModule } from './provider/provider.module';
 import { Activity } from './activity/entities/activity.entity';
 import { Provider } from './provider/entities/provider.entity';
+import { SearchController } from './search/search.controller';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import { Provider } from './provider/entities/provider.entity';
     ActivityTypeModule,
     ActivityModule,
     ProviderModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
